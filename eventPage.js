@@ -302,12 +302,12 @@ function amazon(queries) {
 
 function notify(msg) {
 	
-var notification = new Notification("New Email Received", { icon: "dog.png" })
+var notification = new Notification(msg, { icon: "dog.png" })
 
   //var notification = new Notification(msg);
   setTimeout(function(){
       notification.close();
-  }, 3000); 
+  }, 4000); 
 }
 
 
