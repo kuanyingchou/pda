@@ -125,7 +125,7 @@ console.log(t);
       }
       handle(trans);
 
-      final_transcript = capitalize(final_transcript);
+      
       
     };
 
@@ -205,9 +205,9 @@ function showButtons(style) {
 
 function handle(request) {
   if(!request) return;
-
-  requests.push(request);
 console.log('handle: ' + request);
+  requests.push(request);
+
   var words = request.trim().split(/\s+/);
   if(words.length < 2) { //TODO
     console.log('command is too short');
@@ -217,28 +217,36 @@ console.log('handle: ' + request);
     console.log('command contains no magic word');
     return; 
   }
-console.log('parsing: ' + words.join(","));
+//console.log('parsing: ' + words.join(","));
   var target = words[0];
   var command = words[1];
   var params = words.slice(2);
 
-  notify(words.slice(1).join(' '));
+  notify(capitalize(words.slice(1).join(' ')));
 
   switch(true) {
-    case distance(command, 'search') <= 2:
+    case distance(command, 'find') <= 1:
+      console.log('finding....'+params.join(','));
+      if(params[params.length-1] === 'Amazon') {
+        var q = params.slice(0, params.length-2);
+        console.log('q = '+q.join(' '));
+        amazon(q);
+      }
+      break;
+    case distance(command, 'google') <= 1:
       google(params);
       break;
-    case distance(command, 'say') <= 2:
+    case distance(command, 'say') <= 1:
       say(params.join(' '));
       break;
-    case distance(command, 'read') <= 2:
+    case distance(command, 'read') <= 1:
       if($.inArray('story', params)) {
         say(story);  
       } else {
         console.log("what to read?");
       }
       break;
-    case distance(command, 'press') <= 2:
+    case distance(command, 'press') <= 1:
       //TODO
       var page_up = 33;
       var page_down = 34;
@@ -279,11 +287,17 @@ function say(msg) {
 
 function google(queries) {
   //console.log('q: '+queries);
-  say('searching '+ queries.join(' '));
+  say('searching '+ queries.join(' ') + ' on Google.');
   if(!queries) return;
 
   window.open('https://www.google.com/#q='+
       queries.join('+'));  
+}
+
+function amazon(queries) {
+  say('finding '+ queries.join(' ')+" on Amazon.");
+  window.open('http://www.amazon.com/s/?field-keywords='+
+    queries.join('+'))
 }
 
 function notify(msg) {
